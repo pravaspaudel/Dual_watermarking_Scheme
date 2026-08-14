@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 
 from transformers import LogitsProcessor
-from src.utils import derive_set
+from src.utils.key_manager import derive_set
 
 class PrivateWatermarkProcessor(LogitsProcessor):
     def __init__(self,key,vocab_size,green_fraction=0.5,delta_private=0.7,prev_token_size=5):

@@ -6,7 +6,7 @@ PREV_TOKEN_SIZE = 5
 DETECTION_THRESHOLD = 0.60
 P_VALUE_THRESHOLD = 0.05
 
-from src.utils import derive_set
+from src.utils.key_manager import derive_set
 
 def detect_private_watermark(
     text,
