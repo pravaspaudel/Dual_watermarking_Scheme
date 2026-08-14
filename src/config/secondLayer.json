@@ -1,4 +1,7 @@
 {
+    "MODEL_NAME":"facebook/opt-2.7b",
     "GREEN_FRACTION":0.5,
-    "PREV_TOKENS_COUNT":1
+    "PREV_TOKEN_SIZE":5,
+    "DETECTION_THRESHOLD": 0.60,
+    "P_VALUE_THRESHOLD": 0.05
 }

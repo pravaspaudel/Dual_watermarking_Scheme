@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 
 from transformers import LogitsProcessor
-from src.utils.key_manager import derive_set
+from src.utils import derive_set
 
 class PrivateWatermarkProcessor(LogitsProcessor):
     def __init__(self,key,vocab_size,green_fraction=0.5,delta_private=0.7,prev_token_size=5):
@@ -31,15 +31,14 @@ class PrivateWatermarkProcessor(LogitsProcessor):
                                        prev_tokens=history
                                        )
 
-            preferred = torch.tensor(list(preferred_set),device=scores.device)
+            preferred = torch.tensor(list(preferred_set),
+                                     dtype=torch.long,
+                                     device=scores.device)
 
             scores[b,preferred] += self.delta_private
 
         return scores
     
-
-
-
 def generation_pipeline(
     prompts,
     model,
@@ -58,6 +57,9 @@ def generation_pipeline(
     """
     model.eval()
     results = []
+
+    if processors is None:
+        processors = []
 
     for i, prompt in enumerate(prompts):
 

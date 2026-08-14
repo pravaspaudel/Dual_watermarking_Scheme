@@ -16,7 +16,7 @@ def generate_key(size:int = 32):
 
     return key
 
-def derive_seed(secret_key: bytes, previous_token: str) -> int:
+def derive_seed(secret_key: str, previous_token: str) -> int:
     """
     Derive a deterministic random seed from a secret key
     and the previous token.
@@ -27,18 +27,21 @@ def derive_seed(secret_key: bytes, previous_token: str) -> int:
 
     """
     digest = hmac.new(
-        secret_key,
+        secret_key.encode("utf-8"),
         previous_token.encode("utf-8"),
         hashlib.sha256
     ).digest()
 
     # Use the first 8 bytes as a 64-bit seed
-    return int.from_bytes(digest[:8], byteorder="big")
+    return int.from_bytes(digest[:4], byteorder="big")
 
 
 def derive_set(vocab_size,key,prev_tokens,green_fraction=0.5,prev_tokens_size=1):
 
-    seed = derive_seed(key,prev_tokens,prev_tokens_size)
+    context = prev_tokens[-prev_tokens_size:]
+    previous_tokens = ",".join(map(str,context))
+
+    seed = derive_seed(key,previous_tokens)
 
     state = np.random.RandomState(seed)
 
