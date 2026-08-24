@@ -21,18 +21,38 @@ from src.utils.key_manager import derive_set
 _JUDGE_CACHE = {}
 
 
-def load_judge_model(judge_model_name="gpt2-large", device="cuda"):
+def load_judge_model(judge_model_name="gpt2-large", device="cuda",
+                     torch_dtype=None, load_in_4bit=False):
     """
     Loads (and caches) an independent judge model for external perplexity
     scoring. Default: gpt2-large. Swap to e.g. "EleutherAI/pythia-1.4b" if
     preferred. NEVER pass an OPT checkpoint here - that would bias the
     eval toward the watermark's own generator.
+
+    torch_dtype:   e.g. torch.float16 / torch.bfloat16; None keeps the
+                   checkpoint's native fp32 (31 GB for a 7B judge -> will
+                   OOM everywhere).
+    load_in_4bit:  bitsandbytes 4-bit quantization. REQUIRED for >=7B judges
+                   on a 16 GB T4 (fp16 weights alone are ~15.4 GB). When True
+                   the model is placed via device_map and .to(device) skipped.
     """
     if judge_model_name in _JUDGE_CACHE:
         return _JUDGE_CACHE[judge_model_name]
 
     tokenizer = AutoTokenizer.from_pretrained(judge_model_name)
-    model = AutoModelForCausalLM.from_pretrained(judge_model_name).to(device)
+
+    model_kwargs = {}
+    if torch_dtype is not None:
+        model_kwargs["torch_dtype"] = torch_dtype
+    if load_in_4bit:
+        model_kwargs["load_in_4bit"] = True
+        model_kwargs["device_map"] = device
+
+    model = AutoModelForCausalLM.from_pretrained(judge_model_name, **model_kwargs)
+
+    if not load_in_4bit:
+        model = model.to(device)
+
     model.eval()
 
     _JUDGE_CACHE[judge_model_name] = (model, tokenizer)
