@@ -3,7 +3,7 @@ import pandas as pd
 
 from transformers import LogitsProcessor
 from src.utils.key_manager import derive_set
-from watermark.first_layer import load_topic_greenlists, build_topic_matrix
+from src.watermark.first_layer import load_topic_greenlists, build_topic_matrix
 
 class DualLayerWatermarkProcessor(LogitsProcessor):
     """
