@@ -32,7 +32,6 @@ def derive_seed(secret_key: str, previous_token: str) -> int:
         hashlib.sha256
     ).digest()
 
-    # Use the first 8 bytes as a 64-bit seed
     return int.from_bytes(digest[:4], byteorder="big")
 
 
