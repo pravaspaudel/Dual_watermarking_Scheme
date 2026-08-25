@@ -1,0 +1,4 @@
+detector,positives,TP,FP,TN,FN,TPR,FPR,precision,accuracy,f1
+l1,l1_only+dual,165,0,200,35,0.825,0.0,1.0,0.912,0.904
+l2,l2_only+dual,106,3,197,94,0.53,0.015,0.972,0.757,0.686
+and,dual,53,1,299,47,0.53,0.003,0.981,0.88,0.688
