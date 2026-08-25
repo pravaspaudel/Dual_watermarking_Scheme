@@ -5,7 +5,7 @@ import numpy as np
 import torch
 import pandas as pd
 from scipy.stats import binomtest
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 
 from sklearn.metrics import roc_curve, auc
@@ -45,7 +45,10 @@ def load_judge_model(judge_model_name="gpt2-large", device="cuda",
     if torch_dtype is not None:
         model_kwargs["torch_dtype"] = torch_dtype
     if load_in_4bit:
-        model_kwargs["load_in_4bit"] = True
+        # Newer transformers removed the `load_in_4bit=` shortcut from
+        # from_pretrained; the BitsAndBytesConfig route works on both old
+        # and new versions.
+        model_kwargs["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True)
         model_kwargs["device_map"] = device
 
     model = AutoModelForCausalLM.from_pretrained(judge_model_name, **model_kwargs)
