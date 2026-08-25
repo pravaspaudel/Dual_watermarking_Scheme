@@ -15,9 +15,6 @@ from datasets import load_dataset
 
 from src.utils.key_manager import derive_set
 
-# ============================================================
-# Judge model loading (independent of the watermark generator)
-# ============================================================
 _JUDGE_CACHE = {}
 
 

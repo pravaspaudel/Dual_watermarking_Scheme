@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^python - <<'PY'\nimport csv\nfrom pathlib import Path\nfor name in \\['dual_layer_detection\\.csv','topic_wise_watermarked_example\\.csv'\\]:\n    path=Path\\('data/example'\\)/name\n    with path\\.open\\(newline='',encoding='utf-8'\\) as f:\n        rows=list\\(csv\\.DictReader\\(f\\)\\)\n    print\\('\\\\n###',name,'rows',len\\(rows\\),'columns',list\\(rows\\[0\\]\\)\\)\n    for r in rows:\n        print\\('\\\\nID',r\\.get\\('id'\\),'topic',r\\.get\\('topic',r\\.get\\('gen_topic'\\)\\)\\)\n        if 'prompt' in r:\n            print\\('PROMPT:',r\\['prompt'\\]\\)\n        for k in \\['plain_output','layer1_only_output','dual_watermarked_output','watermarked_output'\\]:\n            if k in r:\n                text=' '\\.join\\(r\\[k\\]\\.split\\(\\)\\)\n                print\\(k\\+':',text\\[:260\\]\\)\nPY$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}
